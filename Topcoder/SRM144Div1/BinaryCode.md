@@ -1,42 +1,49 @@
 #Problem Statement 
 
-In most states, gamblers can choose from a wide variety of different lottery games. The rules of a lottery are
-defined by two integers (choices and blanks) and two boolean variables (sorted and unique). choices represents the highest valid number that you may use on your lottery ticket. (All integers between 1 and choices, inclusive, are valid and can 
-appear on your ticket.) blanks represents the number of spots on your ticket where numbers can be written.
+Let's say you have a binary string such as the following:　　
 
-The sorted and unique variables indicate restrictions on the tickets you can create. If sorted is set to true, then the numbers on your ticket must be written in non-descending order. If sorted is set to false, then the numbers may be written in any order. Likewise, if unique is set to true, then each number you write on your ticket must be distinct. If unique is set to false, then repeats are allowed.
+011100011　　
 
-Here are some example lottery tickets, where choices = 15 and blanks = 4:
+One way to encrypt this string is to add to each digit the sum of its adjacent digits. For example, the above string would become:　　
 
-{3, 7, 12, 14} -- this ticket is unconditionally valid.
+123210122　　
 
-{13, 4, 1, 9} -- because the numbers are not in nondescending order, this ticket is valid only if sorted = false.
+In particular, if P is the original string, and Q is the encrypted string, then Q[i] = P[i-1] + P[i] + P[i+1] for all digit positions i. Characters off the left and right edges of the string are treated as zeroes.　　
 
-{8, 8, 8, 15} -- because there are repeated numbers, this ticket is valid only if unique = false. 
+An encrypted string given to you in this format can be decoded as follows (using 123210122 as an example): 　　
 
-{11, 6, 2, 6} -- this ticket is valid only if sorted = false and unique = false.
+Assume P[0] = 0.　　       
+Because Q[0] = P[0] + P[1] = 0 + P[1] = 1, we know that P[1] = 1.　　    
+Because Q[1] = P[0] + P[1] + P[2] = 0 + 1 + P[2] = 2, we know that P[2] = 1.　　    
+Because Q[2] = P[1] + P[2] + P[3] = 1 + 1 + P[3] = 3, we know that P[3] = 1.　　   
+Repeating these steps gives us P[4] = 0, P[5] = 0, P[6] = 0, P[7] = 1, and P[8] = 1.　　   
+We check our work by noting that Q[8] = P[7] + P[8] = 1 + 1 = 2. Since this equation works out, we are finished, and we have recovered one possible original string.  
 
-Given a list of lotteries and their corresponding rules, return a list of lottery names sorted by how easy they are to win. The probability that you will win a lottery is equal to (1 / (number of valid lottery tickets for that game)). The easiest lottery to win should appear at the front of the list. Ties should be broken alphabetically (see example 1).
+Now we repeat the process, assuming the opposite about P[0]:          
+
+Assume P[0] = 1.　　            
+Because Q[0] = P[0] + P[1] = 1 + P[1] = 1, we know that P[1] = 0.　　              
+Because Q[1] = P[0] + P[1] + P[2] = 1 + 0 + P[2] = 2, we know that P[2] = 1.               
+Now note that Q[2] = P[1] + P[2] + P[3] = 0 + 1 + P[3] = 3, which leads us to the conclusion that P[3] = 2.     
+However, this violates the fact that each character in the original string must be '0' or '1'. Therefore, there exists no such original string P where the first digit is '1'.　　
+
+Note that this algorithm produces at most two decodings for any given encrypted string. There can never be more than one possible way to decode a string once the first binary digit is set.　　
+
+Given a String message, containing the encrypted string, return a String[] with exactly two elements. The first element should contain the decrypted string assuming the first character is '0'; the second element should assume the first character is '1'. If one of the tests fails, return the string "NONE" in its place. For the above example, you should return {"011100011", "NONE"}.　　
  
 ###Definition 
-    Class: Lottery 
-    Method: sortByOdds 
-    Parameters: String[] 
+    Class: BinaryCode 
+    Method: decode 
+    Parameters: String 
     Returns: String[] 
-    Method signature: String[] sortByOdds(String[] rules) 
+    Method signature: String[] decode(String message) 
     (be sure your method is public) 
  
 ###Limits 
-    Time limit (s): 2.000 
-    Memory limit (MB): 64 
+				Time limit (s): 2.000 
+				Memory limit (MB): 64 
  
 ###Constraints 
- - rules will contain between 0 and 50 elements, inclusive. 
- - Each element of rules will contain between 11 and 50 characters, inclusive. 
- - Each element of rules will be in the format "<NAME>:_<CHOICES>_<BLANKS>_<SORTED>_<UNIQUE>" (quotes for clarity). The underscore character represents exactly one space. The string will have no leading or trailing spaces. 
- - <NAME> will contain between 1 and 40 characters, inclusive, and will consist of only uppercase letters ('A'-'Z') and spaces (' '), with no leading or trailing spaces. 
- - <CHOICES> will be an integer between 10 and 100, inclusive, with no leading zeroes. 
- - <BLANKS> will be an integer between 1 and 8, inclusive, with no leading zeroes. 
- - <SORTED> will be either 'T' (true) or 'F' (false). 
- - <UNIQUE> will be either 'T' (true) or 'F' (false). 
- - No two elements in rules will have the same name. 
+- message will contain between 1 and 50 characters, inclusive. 
+- Each character in message will be either '0', '1', '2', or '3'. 
+
