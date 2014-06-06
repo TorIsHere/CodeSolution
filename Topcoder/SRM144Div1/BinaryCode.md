@@ -40,8 +40,8 @@ Given a String message, containing the encrypted string, return a String[] with 
     (be sure your method is public) 
  
 ###Limits 
-				Time limit (s): 2.000 
-				Memory limit (MB): 64 
+    Time limit (s): 2.000 
+    Memory limit (MB): 64 
  
 ###Constraints 
 - message will contain between 1 and 50 characters, inclusive. 
